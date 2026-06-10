@@ -1,49 +1,49 @@
 const boton = document.querySelector("button");
-const dni = document.getElementById("dni");
-const codigo = document.getElementById("codigo");
-const resultado = document.getElementById("resultado");
 
-boton.addEventListener("click", async function () {
-    if (dni.value === "" || codigo.value === "") {
-        alert("Por favor, introduce el DNI y el código de tarjeta.");
-        return;
-    }
+boton.addEventListener("click", async () => {
+
+
+
+    const viajero = {
+        nombre: document.getElementById("nombre").value,
+        apellidos: document.getElementById("apellidos").value,
+        dni: document.getElementById("dni").value,
+        email: document.getElementById("email").value,
+        telefono: document.getElementById("telefono").value
+    };
 
     try {
-        const respuesta = await fetch(
-            `https://localhost:7269/api/recarga?dni=${dni.value}&codigo=${codigo.value}`
-        );
 
-        if (respuesta.status === 404) {
-            resultado.style.display = "block";
-            resultado.innerHTML = `
-                <h3>Bono no encontrado</h3>
-                <p>No existe ningún bono con esos datos.</p>
-            `;
-            return;
-        }
+    const respuesta = await fetch(  
+        "https://localhost:7269/api/Viajeros",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(viajero)
+    });
 
-        if (!respuesta.ok) {
-            throw new Error("Error al consultar la API");
-        }
+    const datos = await respuesta.json();
 
-        const datos = await respuesta.json();
+    const resultado = document.getElementById("resultado");
 
-        resultado.style.display = "block";
-        resultado.innerHTML = `
-            <h3>Información del Bono</h3>
-            <p><strong>DNI:</strong> ${datos.dni}</p>
-            <p><strong>Tarjeta:</strong> ${datos.codigoTarjeta}</p>
-            <p><strong>Viajes disponibles:</strong> ${datos.viajesDisponibles}</p>
-            <p><strong>Estado:</strong> ${datos.estado}</p>
-        `;
+    resultado.style.display = "block";
+    resultado.innerHTML = "<h3>" + datos.mensaje + "</h3>";
 
-    } catch (error) {
-        resultado.style.display = "block";
-        resultado.innerHTML = `
-            <h3>Error</h3>
-            <p>No se ha podido conectar con la API.</p>
-        `;
-        console.error(error);
-    }
-});
+    document.getElementById("nombre").value = "";
+    document.getElementById("apellidos").value = "";
+    document.getElementById("dni").value = "";
+    document.getElementById("email").value = "";
+    document.getElementById("telefono").value = ""; //Borra campos, más elegante
+
+} catch (error) {
+
+    console.error(error);
+
+    const resultado = document.getElementById("resultado");
+
+    resultado.style.display = "block";
+    resultado.innerHTML = "<h3>Error al conectar con la API</h3>";
+}
+});      
