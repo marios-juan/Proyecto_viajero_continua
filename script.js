@@ -5,6 +5,7 @@ boton.addEventListener("click", async () => {
 
 
     const viajero = {
+        tarjeta: document.getElementById("tarjeta").value,
         nombre: document.getElementById("nombre").value,
         apellidos: document.getElementById("apellidos").value,
         dni: document.getElementById("dni").value,
@@ -31,6 +32,9 @@ boton.addEventListener("click", async () => {
     resultado.style.display = "block";
     resultado.innerHTML = "<h3>" + datos.mensaje + "</h3>";
 
+    window.location.href = "recarga.html";
+
+    document.getElementById("tarjeta").value = "";
     document.getElementById("nombre").value = "";
     document.getElementById("apellidos").value = "";
     document.getElementById("dni").value = "";
